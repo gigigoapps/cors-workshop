@@ -22,8 +22,9 @@ function ajaxData(method) {
     xhrFields: {
       withCredentials: true
     }
-  }).done(function(data) {
+  }).done(function(data, status, xhr) {
     console.log(data);
+    console.log(xhr.getResponseHeader("x-server-version"));
   });
 }
 </script>

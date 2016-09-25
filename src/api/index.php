@@ -48,7 +48,10 @@ $app->after(function(Request $request, Response $response) use ($app) {
 
     $response->headers->add([
         'Access-Control-Allow-Origin' => $origin,
-        'Access-Control-Allow-Credentials' => 'true'
+        'Access-Control-Allow-Credentials' => 'true',
+        // expose headers to client
+        'x-server-version' => 'SERVER_VERSION_4.0',
+        'Access-Control-Expose-Headers' => 'x-server-version'
     ]);
 });
 
