@@ -10,7 +10,7 @@ Some examples to explain CORS (Cross Origin Resource Sharing)
 Move to branch `1-cors-simple-requests`
 
 ## Example 2: Preflighted requests
-Move to branch `1-cors-preflighted-requests`
+Move to branch `2-cors-preflighted-requests`
 
 ## Example 3: Requests with credentials
-Move to branch `1-cors-requests-with-credentials`
+Move to branch `3-cors-requests-with-credentials`
