@@ -15,7 +15,10 @@ $app->get('/', function() use($app) {
 function ajaxData(method) {
   $.ajax({
     url: 'http://localhost:8081/api',
-    method: method
+    method: method,
+    headers: {
+        'X-app-version': '1.0.0-RC'
+    }
   }).done(function(data) {
     console.log(data);
   });

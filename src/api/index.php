@@ -24,10 +24,16 @@ HTML;
  */
 $app->before(function(Request $request) use( $app) {
     if ($request->getMethod() == 'OPTIONS') {
-        $origin = '*';
-
         return new Response('', 200, [
-            'Access-Control-Allow-Origin' => $origin
+            /* ORIGIN WILL BE ADDED IN AFTER LISTENER */
+
+            // 1 Resolve PUT method by adding in header
+            'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE',
+            // 2 Resolve custom headers by adding in header
+            'Access-Control-Allow-Headers' => 'X-app-version',
+            // 3 cache OPTIONS request
+            'Access-Control-Max-Age' => 86400
+            // 4 Play with browser cache and remove PUT from valid methods to see behavior
         ]);
     }
 }, Silex\Application::EARLY_EVENT);
@@ -49,7 +55,8 @@ $app->after(function(Request $request, Response $response) use ($app) {
 $app->match('/api', function(Request $request) use($app) {
     return JsonResponse::create([
         'title' => 'Cors (' . $request->getMethod() . ')',
-        'type' => 'WorkShop'
+        'type' => 'WorkShop',
+        'version' => $request->headers->get('X-app-version')
     ]);
 })
 ->method('GET|POST|PUT');
