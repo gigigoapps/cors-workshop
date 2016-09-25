@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 $app = new Silex\Application();
 
 /**
+ * Register session
+ */
+$app->register(new Silex\Provider\SessionServiceProvider());
+
+/**
  * Api Homepage
  */
 $app->get('/', function() use($app) {
@@ -27,13 +32,9 @@ $app->before(function(Request $request) use( $app) {
         return new Response('', 200, [
             /* ORIGIN WILL BE ADDED IN AFTER LISTENER */
 
-            // 1 Resolve PUT method by adding in header
             'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE',
-            // 2 Resolve custom headers by adding in header
             'Access-Control-Allow-Headers' => 'X-app-version',
-            // 3 cache OPTIONS request
             'Access-Control-Max-Age' => 86400
-            // 4 Play with browser cache and remove PUT from valid methods to see behavior
         ]);
     }
 }, Silex\Application::EARLY_EVENT);
@@ -42,10 +43,12 @@ $app->before(function(Request $request) use( $app) {
  * After request will be sent to client, set cors headers
  */
 $app->after(function(Request $request, Response $response) use ($app) {
-    $origin = '*';
+    //$origin = '*';
+    $origin = $request->headers->get('origin');
 
     $response->headers->add([
-        'Access-Control-Allow-Origin' => $origin
+        'Access-Control-Allow-Origin' => $origin,
+        'Access-Control-Allow-Credentials' => 'true'
     ]);
 });
 
@@ -53,10 +56,19 @@ $app->after(function(Request $request, Response $response) use ($app) {
  * Some api endpoint
  */
 $app->match('/api', function(Request $request) use($app) {
+
+    // TODO check this response, activating and deactivating withCredentials in browser
+
+    if (null === $firstAccessTime = $app['session']->get('firstAccessTime')) {
+        $firstAccessTime = (new \DateTime())->format(DATE_ISO8601);
+        $app['session']->set('firstAccessTime', $firstAccessTime);
+    }
+
     return JsonResponse::create([
         'title' => 'Cors (' . $request->getMethod() . ')',
         'type' => 'WorkShop',
-        'version' => $request->headers->get('X-app-version')
+        'version' => $request->headers->get('X-app-version'),
+        'firstTimeAccess' => $firstAccessTime
     ]);
 })
 ->method('GET|POST|PUT');

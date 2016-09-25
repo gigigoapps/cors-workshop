@@ -18,6 +18,9 @@ function ajaxData(method) {
     method: method,
     headers: {
         'X-app-version': '1.0.0-RC'
+    },
+    xhrFields: {
+      withCredentials: true
     }
   }).done(function(data) {
     console.log(data);
