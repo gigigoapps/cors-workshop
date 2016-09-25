@@ -12,15 +12,22 @@ $app->get('/', function() use($app) {
     
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script>
-function getAjaxData() {
-  $.get('http://localhost:8081/api', function(response) {
-    console.log(response);
-  }, 'json');
+function ajaxData(method) {
+  $.ajax({
+    url: 'http://localhost:8081/api',
+    method: method
+  }).done(function(data) {
+    console.log(data);
+  });
 }
 </script>
         
 <h1>Welcome to Dashbard</h1>
-<a href="javascript:getAjaxData()">call to api with ajax</a>
+<ul>
+<li><a href="javascript:ajaxData('GET')">GET call to api with ajax</a></li>
+<li><a href="javascript:ajaxData('POST')">POST call to api with ajax</a></li>
+<li><a href="javascript:ajaxData('PUT')">PUT call to api with ajax</a></li>
+</ul>
 
 HTML;
 });
